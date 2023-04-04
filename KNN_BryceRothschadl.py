@@ -6,14 +6,11 @@ COMPSCI 332-01
 """
 
 import csv
-import random
+import math
 import sys
 
 
 def main():
-    # assign k value
-    k = assign_k_val()
-
     # create training data/label
     train_path = "wine_train.txt"
     train_data = create_data(train_path)  # train label is index 11 of each row
@@ -21,36 +18,34 @@ def main():
 
     # create test data/label
     test_path = "wine_test.txt"
-    test_data = create_data(test_path)
+    test_data = create_data(test_path)  # test label is index 11 of each row
     # print(test_data[len(test_data) - 1])  # prints last element
+
+    # assign k value
+    k = assign_k_val(len(train_data))
 
     # make predictions
     test_predict = my_knn(train_data, test_data, k)
     # print(test_predict[len(test_predict) - 1])
 
     # calculate accuracy
+    # TODO: calculate accuracy
+    num_correct = 1  # TODO: this is currently a placeholder value
+    percent_correct = round(num_correct / len(test_data) * 100, 2)
 
     # print output
-    num_correct = 0
     print("K value: ", k, '\n')
     print("+--------------------+--------------+----------------+")
     print("|  Test Point Index  |  Prediction  |  Actual Label  |")
     print("+--------------------+--------------+----------------+")
-    # print("|              ", end="")
-    # # index
-    # print('{:4d}'.format(index), end="")
-    # print("  |        ", end="")
-    # # prediction
-    # print('{:4d}'.format(prediction), end="")
-    # print("  |          ", end="")
-    # # actual
-    # print('{:4d}'.format(actual), end="")
+    # print("|{:18d}".format(index), end="")
+    # print("  |{:12d}".format(prediction), end="")
+    # print("  |{:14d}".format(actual), end="")
     # print("  |")
     print("+--------------------+--------------+----------------+\n")
     print("Number of correctly classified test instances: ", num_correct)
     print("Number of instances in the test set: ", len(test_data))
-    print("Percentage of correctly classified instances: ",
-          num_correct/len(test_data) * 100)
+    print("Percentage of correctly classified instances: " + str(percent_correct) + '%')
 
 
 def my_knn(train_data, test_data, k):
@@ -70,13 +65,13 @@ def create_data(path):
     return data_list
 
 
-def assign_k_val():
-    if len(sys.argv) > 1:
+def assign_k_val(size):
+    # if an integer command line argument is given, set k to it
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
         return sys.argv[1]
-    # if no k value is given, assign random value
+    # else, assign k as sqrt of the number of elements in the training data
     else:
-        random.seed()
-        return random.randint(1, 10)
+        return math.floor(math.sqrt(size))
 
 
 if __name__ == '__main__':
